@@ -15,30 +15,40 @@ float playerRot = 0;
 float playerTemp = 100;
 float playerSpeed = 2; // the players top speed not current speed
 
-//props
-//ArrayList<Prop> props = new ArrayList<Prop>();
+// Prop Vars
+ArrayList<Prop> props = new ArrayList<Prop>();
 
 void setup() {
   size(800, 800);
+  
+  props.add(new Prop(-50, 50));
+  props.add(new Prop(50, -50));
+  props.add(new Prop(-50, -50));
+  props.add(new Prop(50, 50));
+  
 }
 
 void draw() {
   background(255);
  // camX = mouseX;
  // camY = mouseY;
-  
+  text("x: " + playerX + " y: " + playerY, 10, 10);
   translate(-camX, -camY);
   
   // draw shit
+  
+  for(Prop p : props) {
+    p.draw();
+  }
   drawPlayer();
   
-  
   // control shit
-  playerControl();
+  playerMove();
+  playerFace();
   cameraControl();
 }
 
-void playerControl() {
+void playerFace() {
   PVector mLoc = new PVector(mouseX, mouseY);
   PVector screen = new PVector(width/2, height/2);
   PVector b = PVector.sub(mLoc, screen);
@@ -58,8 +68,9 @@ void playerControl() {
     
     playerRot = (float) Math.atan(b.y / b.x) + p;
   }
+}
   
-  
+void playerMove() {
   for(char k : keys) {
     switch (k) {
       case 'W':
@@ -126,4 +137,26 @@ void drawPlayer() {
   
   popMatrix();
   
+}
+
+class Prop {
+  
+  float locX;
+  float locY;
+  
+  Prop(float x, float y) {
+    this.locX = x;
+    this.locY = y;
+  }
+  
+  void draw() {
+    pushMatrix();
+    
+    translate(locX, locY);
+    
+    fill(0);
+    rect(0, 0, 20, 20);
+    
+    popMatrix();
+  }
 }
